@@ -12,11 +12,11 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 另外需要注意的是，在使用lombok注解的时候记得要导入lombok.jar包到工程，如果使用的是Maven的工程项目的话，要在其pom.xml中添加依赖如下：
 
 ~~~
-&lt;dependency&gt;
-    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt; 
-    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
-    &lt;version&gt;1.16.8&lt;/version&gt;
-&lt;/dependency&gt;
+<dependency>
+    <groupId>org.projectlombok</groupId> 
+    <artifactId>lombok</artifactId>
+    <version>1.16.8</version>
+</dependency>
 ~~~
 
 # 注解使用
@@ -58,8 +58,8 @@ Val可以将变量申明是final类型。
 
 ~~~
 public String example() {
-    val example = new ArrayList&lt;String&gt;();
-    example.add(&quot;Hello, World!&quot;);
+    val example = new ArrayList<String>();
+    example.add("Hello, World!");
     val foo = example.get(0);
     return foo.toLowerCase();
 }
@@ -68,8 +68,8 @@ public String example() {
 
 ~~~
 public String example() {
-    final ArrayList&lt;String&gt; example = new ArrayList&lt;String&gt;();
-    example.add(&quot;Hello, World!&quot;);
+    final ArrayList<String> example = new ArrayList<String>();
+    example.add("Hello, World!");
     final String foo = example.get(0);
     return foo.toLowerCase();
 }
@@ -84,7 +84,7 @@ public class NonNullExample extends Something {
   private String name;
   
   public NonNullExample(@NonNull Person person) {
-    super(&quot;Hello&quot;);
+    super("Hello");
     this.name = person.getName();
   }
 }
@@ -96,9 +96,9 @@ public class NonNullExample extends Something {
   private String name;
   
   public NonNullExample(@NonNull Person person) {
-    super(&quot;Hello&quot;);
+    super("Hello");
     if (person == null) {
-      throw new NullPointerException(&quot;person&quot;);
+      throw new NullPointerException("person");
     }
     this.name = person.getName();
   }
@@ -164,7 +164,7 @@ public class GetterSetterExample {
   @Setter(AccessLevel.PROTECTED) private String name;
   
   @Override public String toString() {
-    return String.format(&quot;%s (age: %d)&quot;, name, age);
+    return String.format("%s (age: %d)", name, age);
   }
 }
 ~~~
@@ -178,7 +178,7 @@ public class GetterSetterExample {
   private String name;
   
   @Override public String toString() {
-    return String.format(&quot;%s (age: %d)&quot;, name, age);
+    return String.format("%s (age: %d)", name, age);
   }
   
   public int getAge() {
@@ -201,7 +201,7 @@ public class GetterSetterExample {
 Debug Log 最强帮手
 
 ~~~
-@ToString(exclude=&quot;id&quot;)
+@ToString(exclude="id")
 public class ToStringExample {
   private static final int STATIC_VAR = 10;
   private String name;
@@ -247,12 +247,12 @@ public class ToStringExample {
     }
     
     @Override public String toString() {
-      return &quot;Square(super=&quot; + super.toString() + &quot;, width=&quot; + this.width + &quot;, height=&quot; + this.height + &quot;)&quot;;
+      return "Square(super=" + super.toString() + ", width=" + this.width + ", height=" + this.height + ")";
     }
   }
   
   @Override public String toString() {
-    return &quot;ToStringExample(&quot; + this.getName() + &quot;, &quot; + this.shape + &quot;, &quot; + Arrays.deepToString(this.tags) + &quot;)&quot;;
+    return "ToStringExample(" + this.getName() + ", " + this.shape + ", " + Arrays.deepToString(this.tags) + ")";
   }
 }
 ~~~
@@ -262,9 +262,9 @@ public class ToStringExample {
 这几个注解分别为类自动生成了无参构造器、指定参数的构造器和包含所有参数的构造器。
 
 ~~~
-@RequiredArgsConstructor(staticName = &quot;of&quot;)
+@RequiredArgsConstructor(staticName = "of")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ConstructorExample&lt;T&gt; {
+public class ConstructorExample<T> {
   private int x, y;
   @NonNull private T description;
   
@@ -277,22 +277,22 @@ public class ConstructorExample&lt;T&gt; {
 翻译后：
 
 ~~~
-public class ConstructorExample&lt;T&gt; {
+public class ConstructorExample<T> {
   private int x, y;
   @NonNull private T description;
   
   private ConstructorExample(T description) {
-    if (description == null) throw new NullPointerException(&quot;description&quot;);
+    if (description == null) throw new NullPointerException("description");
     this.description = description;
   }
   
-  public static &lt;T&gt; ConstructorExample&lt;T&gt; of(T description) {
-    return new ConstructorExample&lt;T&gt;(description);
+  public static <T> ConstructorExample<T> of(T description) {
+    return new ConstructorExample<T>(description);
   }
   
-  @java.beans.ConstructorProperties({&quot;x&quot;, &quot;y&quot;, &quot;description&quot;})
+  @java.beans.ConstructorProperties({"x", "y", "description"})
   protected ConstructorExample(int x, int y, T description) {
-    if (description == null) throw new NullPointerException(&quot;description&quot;);
+    if (description == null) throw new NullPointerException("description");
     this.x = x;
     this.y = y;
     this.description = description;
@@ -327,8 +327,8 @@ public class ConstructorExample&lt;T&gt; {
   protected String[] tags;
   
   @ToString(includeFieldNames=true)
-  @Value(staticConstructor=&quot;of&quot;)
-  public static class Exercise&lt;T&gt; {
+  @Value(staticConstructor="of")
+  public static class Exercise<T> {
     String name;
     T value;
   }
@@ -343,7 +343,7 @@ public final class ValueExample {
   private final double score;
   protected final String[] tags;
   
-  @java.beans.ConstructorProperties({&quot;name&quot;, &quot;age&quot;, &quot;score&quot;, &quot;tags&quot;})
+  @java.beans.ConstructorProperties({"name", "age", "score", "tags"})
   public ValueExample(String name, int age, double score, String[] tags) {
     this.name = name;
     this.age = age;
@@ -389,21 +389,21 @@ public final class ValueExample {
     result = result * PRIME + ($name == null ? 43 : $name.hashCode());
     result = result * PRIME + this.getAge();
     final long $score = Double.doubleToLongBits(this.getScore());
-    result = result * PRIME + (int)($score &gt;&gt;&gt; 32 ^ $score);
+    result = result * PRIME + (int)($score >>> 32 ^ $score);
     result = result * PRIME + Arrays.deepHashCode(this.getTags());
     return result;
   }
   
   @java.lang.Override
   public String toString() {
-    return &quot;ValueExample(name=&quot; + getName() + &quot;, age=&quot; + getAge() + &quot;, score=&quot; + getScore() + &quot;, tags=&quot; + Arrays.deepToString(getTags()) + &quot;)&quot;;
+    return "ValueExample(name=" + getName() + ", age=" + getAge() + ", score=" + getScore() + ", tags=" + Arrays.deepToString(getTags()) + ")";
   }
   
   ValueExample withAge(int age) {
     return this.age == age ? this : new ValueExample(name, age, score, tags);
   }
   
-  public static final class Exercise&lt;T&gt; {
+  public static final class Exercise<T> {
     private final String name;
     private final T value;
     
@@ -412,8 +412,8 @@ public final class ValueExample {
       this.value = value;
     }
     
-    public static &lt;T&gt; Exercise&lt;T&gt; of(String name, T value) {
-      return new Exercise&lt;T&gt;(name, value);
+    public static <T> Exercise<T> of(String name, T value) {
+      return new Exercise<T>(name, value);
     }
     
     public String getName() {
@@ -428,7 +428,7 @@ public final class ValueExample {
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof ValueExample.Exercise)) return false;
-      final Exercise&lt;?&gt; other = (Exercise&lt;?&gt;)o;
+      final Exercise<?> other = (Exercise<?>)o;
       final Object this$name = this.getName();
       final Object other$name = other.getName();
       if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
@@ -451,7 +451,7 @@ public final class ValueExample {
     
     @java.lang.Override
     public String toString() {
-      return &quot;ValueExample.Exercise(name=&quot; + getName() + &quot;, value=&quot; + getValue() + &quot;)&quot;;
+      return "ValueExample.Exercise(name=" + getName() + ", value=" + getValue() + ")";
     }
   }
 }
@@ -466,7 +466,7 @@ public final class ValueExample {
 public class BuilderExample {
   private String name;
   private int age;
-  @Singular private Set&lt;String&gt; occupations;
+  @Singular private Set<String> occupations;
 }
 ~~~
 翻译后：
@@ -475,9 +475,9 @@ public class BuilderExample {
 public class BuilderExample {
   private String name;
   private int age;
-  private Set&lt;String&gt; occupations;
+  private Set<String> occupations;
   
-  BuilderExample(String name, int age, Set&lt;String&gt; occupations) {
+  BuilderExample(String name, int age, Set<String> occupations) {
     this.name = name;
     this.age = age;
     this.occupations = occupations;
@@ -490,7 +490,7 @@ public class BuilderExample {
   public static class BuilderExampleBuilder {
     private String name;
     private int age;
-    private java.util.ArrayList&lt;String&gt; occupations;
+    private java.util.ArrayList<String> occupations;
     
     BuilderExampleBuilder() {
     }
@@ -507,16 +507,16 @@ public class BuilderExample {
     
     public BuilderExampleBuilder occupation(String occupation) {
       if (this.occupations == null) {
-        this.occupations = new java.util.ArrayList&lt;String&gt;();
+        this.occupations = new java.util.ArrayList<String>();
       }
       
       this.occupations.add(occupation);
       return this;
     }
     
-    public BuilderExampleBuilder occupations(Collection&lt;? extends String&gt; occupations) {
+    public BuilderExampleBuilder occupations(Collection<? extends String> occupations) {
       if (this.occupations == null) {
-        this.occupations = new java.util.ArrayList&lt;String&gt;();
+        this.occupations = new java.util.ArrayList<String>();
       }
 
       this.occupations.addAll(occupations);
@@ -534,13 +534,13 @@ public class BuilderExample {
     public BuilderExample build() {
       // complicated switch statement to produce a compact properly sized immutable set omitted.
       // go to https://projectlombok.org/features/Singular-snippet.html to see it.
-      Set&lt;String&gt; occupations = ...;
+      Set<String> occupations = ...;
       return new BuilderExample(name, age, occupations);
     }
     
     @java.lang.Override
     public String toString() {
-      return &quot;BuilderExample.BuilderExampleBuilder(name = &quot; + this.name + &quot;, age = &quot; + this.age + &quot;, occupations = &quot; + this.occupations + &quot;)&quot;;
+      return "BuilderExample.BuilderExampleBuilder(name = " + this.name + ", age = " + this.age + ", occupations = " + this.occupations + ")";
     }
   }
 }
@@ -556,7 +556,7 @@ to RuntimeException 小助手
 public class SneakyThrowsExample implements Runnable {
   @SneakyThrows(UnsupportedEncodingException.class)
   public String utf8ToString(byte[] bytes) {
-    return new String(bytes, &quot;UTF-8&quot;);
+    return new String(bytes, "UTF-8");
   }
   
   @SneakyThrows
@@ -571,7 +571,7 @@ public class SneakyThrowsExample implements Runnable {
 public class SneakyThrowsExample implements Runnable {
   public String utf8ToString(byte[] bytes) {
     try {
-      return new String(bytes, &quot;UTF-8&quot;);
+      return new String(bytes, "UTF-8");
     } catch (UnsupportedEncodingException e) {
       throw Lombok.sneakyThrow(e);
     }
@@ -596,7 +596,7 @@ public class SynchronizedExample {
   
   @Synchronized
   public static void hello() {
-    System.out.println(&quot;world&quot;);
+    System.out.println("world");
   }
   
   @Synchronized
@@ -604,9 +604,9 @@ public class SynchronizedExample {
     return 42;
   }
   
-  @Synchronized(&quot;readLock&quot;)
+  @Synchronized("readLock")
   public void foo() {
-    System.out.println(&quot;bar&quot;);
+    System.out.println("bar");
   }
 }
 ~~~
@@ -620,7 +620,7 @@ public class SynchronizedExample {
   
   public static void hello() {
     synchronized($LOCK) {
-      System.out.println(&quot;world&quot;);
+      System.out.println("world");
     }
   }
   
@@ -632,7 +632,7 @@ public class SynchronizedExample {
   
   public void foo() {
     synchronized(readLock) {
-      System.out.println(&quot;bar&quot;);
+      System.out.println("bar");
     }
   }
 }
@@ -648,7 +648,7 @@ public class GetterLazyExample {
   
   private double[] expensive() {
     double[] result = new double[1000000];
-    for (int i = 0; i &lt; result.length; i++) {
+    for (int i = 0; i < result.length; i++) {
       result[i] = Math.asin(i);
     }
     return result;
@@ -659,7 +659,7 @@ public class GetterLazyExample {
 
 ~~~
 public class GetterLazyExample {
-  private final java.util.concurrent.AtomicReference&lt;java.lang.Object&gt; cached = new java.util.concurrent.AtomicReference&lt;java.lang.Object&gt;();
+  private final java.util.concurrent.AtomicReference<java.lang.Object> cached = new java.util.concurrent.AtomicReference<java.lang.Object>();
   
   public double[] getCached() {
     java.lang.Object value = this.cached.get();
@@ -678,7 +678,7 @@ public class GetterLazyExample {
   
   private double[] expensive() {
     double[] result = new double[1000000];
-    for (int i = 0; i &lt; result.length; i++) {
+    for (int i = 0; i < result.length; i++) {
       result[i] = Math.asin(i);
     }
     return result;
@@ -694,7 +694,7 @@ public class GetterLazyExample {
 public class LogExample {
   
   public static void main(String... args) {
-    log.error(&quot;Something&#039;s wrong here&quot;);
+    log.error("Something's wrong here");
   }
 }
 ~~~
@@ -703,16 +703,16 @@ public class LogExample {
 public class LogExampleOther {
   
   public static void main(String... args) {
-    log.error(&quot;Something else is wrong here&quot;);
+    log.error("Something else is wrong here");
   }
 }
 ~~~
 ~~~
-@CommonsLog(topic=&quot;CounterLog&quot;)
+@CommonsLog(topic="CounterLog")
 public class LogExampleCategory {
 
   public static void main(String... args) {
-    log.error(&quot;Calling the &#039;CounterLog&#039; with a message&quot;);
+    log.error("Calling the 'CounterLog' with a message");
   }
 }
 ~~~
@@ -723,21 +723,21 @@ public class LogExample {
   private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogExample.class.getName());
   
   public static void main(String... args) {
-    log.error(&quot;Something&#039;s wrong here&quot;);
+    log.error("Something's wrong here");
   }
 }
 public class LogExampleOther {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LogExampleOther.class);
   
   public static void main(String... args) {
-    log.error(&quot;Something else is wrong here&quot;);
+    log.error("Something else is wrong here");
   }
 }
 public class LogExampleCategory {
-  private static final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(&quot;CounterLog&quot;);
+  private static final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog("CounterLog");
 
   public static void main(String... args) {
-    log.error(&quot;Calling the &#039;CounterLog&#039; with a message&quot;);
+    log.error("Calling the 'CounterLog' with a message");
   }
 }
 ~~~
