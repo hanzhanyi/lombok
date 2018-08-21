@@ -40,6 +40,8 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 @NoArgsConstructor：注解在类上；为类提供一个无参的构造方法
 
+@RequiredArgsConstructor :注解在类上；为类的特殊字段提供一个构造方法
+
 @AllArgsConstructor：注解在类上；为类提供一个全参的构造方法
 
 @Clearup: 自动管理资源
@@ -57,28 +59,6 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 # Lombok使用
 
-## val 
-[val详情](example/val.md)
-~~~
-public String example() {
-    val example = new ArrayList<String>();
-    example.add("Hello, World!");
-    val foo = example.get(0);
-    return foo.toLowerCase();
-}
-~~~
-翻译成 Java 程序是：
-
-~~~
-public String example() {
-    final ArrayList<String> example = new ArrayList<String>();
-    example.add("Hello, World!");
-    final String foo = example.get(0);
-    return foo.toLowerCase();
-}
-~~~
-也就是类型推导啦。
-
 ## @NonNull
 
 您可以在方法的参数或构造函数的参数上使用@NonNull让lombok为您生成null-check语句。
@@ -89,7 +69,7 @@ if (param == null) throw new NullPointerException("param is marked @NonNull but 
 ~~~
 并将插入到方法的最顶层。对于构造函数，将在任何显式this（）或super（）调用之后立即插入空检查。
 
-~~~
+~~~java
 public class NonNullExample extends Something {
   private String name;
   
@@ -101,7 +81,7 @@ public class NonNullExample extends Something {
 ~~~
 翻译成 Java 程序是：
 
-~~~
+~~~java
 public class NonNullExample extends Something {
   private String name;
   
@@ -129,7 +109,7 @@ Automatic resource management: Call your close() methods safely with no hassle.
 （自动化的安全调用close()方法）
 
 
-~~~
+~~~java
 public class CleanupExample {
   public static void main(String[] args) throws IOException {
     @Cleanup InputStream in = new FileInputStream(args[0]);
@@ -145,7 +125,7 @@ public class CleanupExample {
 ~~~
 翻译成 Java 程序是：
 
-~~~
+~~~java
 public class CleanupExample {
   public static void main(String[] args) throws IOException {
     InputStream in = new FileInputStream(args[0]);
@@ -185,7 +165,7 @@ public class CleanupExample {
 
 您始终可以使用特殊的AccessLevel.NONE访问级别手动禁用任何字段的getter / setter生成。这使您可以覆盖类上的@Getter，@ Setter或@Data注释的行为。
 
-~~~
+~~~java
 public class GetterSetterExample {
 
   @Getter @Setter private int age = 10;
@@ -199,7 +179,7 @@ public class GetterSetterExample {
 ~~~
 翻译成 Java 程序是：
 
-~~~
+~~~java
 public class GetterSetterExample {
 
   private int age = 10;
@@ -237,7 +217,7 @@ public class GetterSetterExample {
 没有等级的成员被认为具有等级0，更高等级的成员被首先打印，
 并且相同等级的成员以它们在源文件中出现的相同顺序被打印。
 
-~~~
+~~~java
 @ToString(exclude="id")
 public class ToStringExample {
   private static final int STATIC_VAR = 10;
@@ -263,7 +243,7 @@ public class ToStringExample {
 ~~~
 翻译后：
 
-~~~
+~~~java
 public class ToStringExample {
   private static final int STATIC_VAR = 10;
   private String name;
@@ -314,7 +294,7 @@ NullPointerException。参数的顺序与字段在类中的显示顺序相匹配
 通常不会满足这些约束。
 
 @AllArgsConstructor为类中的每个字段作为参数的构造函数。标有@NonNull的字段会导致对这些参数进行空检查。
-~~~
+~~~java
 @RequiredArgsConstructor(staticName = "of")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ConstructorExample<T> {
@@ -329,7 +309,7 @@ public class ConstructorExample<T> {
 ~~~
 翻译后：
 
-~~~
+~~~java
 public class ConstructorExample<T> {
   private int x, y;
   @NonNull private T description;
@@ -362,7 +342,7 @@ public class ConstructorExample<T> {
 
 ## EqualsAndHashCode
 自动生成equals&hashcode方法
-~~~
+~~~java
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
@@ -390,7 +370,7 @@ public class EqualsAndHashCodeExample {
 }
 ~~~
 翻译后：
-~~~
+~~~java
 import java.util.Arrays;
 
 public class EqualsAndHashCodeExample {
@@ -467,7 +447,7 @@ public class EqualsAndHashCodeExample {
 ## @Data
 这个一个注解就相当于@RequiredArgsConstructor，@ToString, @EqualsAndHashCode, @Getter,@Setter@Value 的集合
 
-~~~
+~~~java
  * @see Getter
  * @see Setter
  * @see RequiredArgsConstructor
@@ -479,7 +459,7 @@ public class EqualsAndHashCodeExample {
 ## @Builder
 
 提供了一种构建对象的方式。
-~~~
+~~~java
 @Builder
 public class BuilderExample {
   private String name;
@@ -489,7 +469,7 @@ public class BuilderExample {
 ~~~
 翻译后：
 
-~~~
+~~~java
 public class BuilderExample {
   private String name;
   private int age;
@@ -576,7 +556,7 @@ Synchronized关键字通过this锁定，但注释锁定在名为$lock的字段�
 避免暴露你的锁，这样会避免不受你控制的其他代码也锁定这个对象，造成竞争条件 造成相关线程错误
 
 
-~~~
+~~~java
 
 public class SynchronizedExample {
   private final Object readLock = new Object();
@@ -599,7 +579,7 @@ public class SynchronizedExample {
 ~~~
 翻译后
 
-~~~
+~~~java
 public class SynchronizedExample {
   private static final Object $LOCK = new Object[0];
   private final Object $lock = new Object[0];
@@ -629,7 +609,7 @@ public class SynchronizedExample {
 ## @Log
 再也不用写那些差不多的LOG啦
 
-~~~
+~~~java
 @Log
 public class LogExample {
   
@@ -638,7 +618,7 @@ public class LogExample {
   }
 }
 ~~~
-~~~
+~~~java
 @Slf4j
 public class LogExampleOther {
   
@@ -647,7 +627,7 @@ public class LogExampleOther {
   }
 }
 ~~~
-~~~
+~~~java
 @CommonsLog(topic="CounterLog")
 public class LogExampleCategory {
 
@@ -658,7 +638,7 @@ public class LogExampleCategory {
 ~~~
 翻译后：
 
-~~~
+~~~java
 public class LogExample {
   private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogExample.class.getName());
   
@@ -693,3 +673,5 @@ Lombok这款插件正是依靠可插件化的Java自定义注解处理API（JSR 
 ![](https://box.kancloud.cn/a09e8f2534663f4dc474d4867f4d9365_278x689.png)
 
 从上面的Lombok执行的流程图中可以看出，在Javac 解析成AST抽象语法树之后, Lombok 根据自己编写的注解处理器，动态地修改 AST，增加新的节点（即Lombok自定义注解所需要生成的代码），最终通过分析生成JVM可执行的字节码Class文件。使用Annotation Processing自定义注解是在编译阶段进行修改，而JDK的反射技术是在运行时动态修改，两者相比，反射虽然更加灵活一些但是带来的性能损耗更加大。
+
+### [JSR269与AST介绍](example/jsr269.md)
