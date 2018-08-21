@@ -1,15 +1,18 @@
 
 # Lombok的简介
-Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一些注解来消除业务工程中冗长和繁琐的代码，尤其对于简单的Java模型对象（POJO）。在开发环境中使用Lombok插件后，Java开发人员可以节省出重复构建，诸如hashCode和equals这样的方法以及各种业务对象模型的accessor和ToString等方法的大量时间。对于这些方法，它能够在编译源代码期间自动帮我们生成这些方法，并没有如反射那样降低程序的性能。
+Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一些注解来消除业务工程中冗长和繁琐的代码，
+尤其对于简单的Java模型对象（POJO）。在开发环境中使用Lombok插件后，Java开发人员可以节省出重复构建，
+诸如hashCode和equals这样的方法以及各种业务对象模型的accessor和ToString等方法的大量时间。对于这些方法，
+它能够在编译源代码期间自动帮我们生成这些方法，并没有如反射那样降低程序的性能。
 
 # IDEA安装Lombok的插件
-想要体验一把Lombok的话，得先在自己的开发环境中安装上对应的插件。下面先为大家展示下如何在Intellij中安装上Lombok插件。
+如何在Intellij中安装上Lombok插件。
 
 通过IntelliJ的插件中心寻找Lombok
 
 ![](https://box.kancloud.cn/42406103f19cdc034f57cea2bdc064f2_1296x1022.png)
 
-另外需要注意的是，在使用lombok注解的时候记得要导入lombok.jar包到工程，如果使用的是Maven的工程项目的话，要在其pom.xml中添加依赖如下：
+另外需要注意的是，在使用lombok注解的时候记得要导入lombok.jar包到工程，在其pom.xml中添加：
 
 ~~~
 <dependency>
@@ -23,12 +26,15 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 常用注解
 
+[官方文档](https://www.projectlombok.org/features/all)
+
 ~~~
-@Data   ：注解在类上；提供类所有属性的 getting 和 setting 方法，此外还提供了equals、canEqual、hashCode、toString 方法
+@Data   ：注解在类上；提供类所有属性的 getting 和 setting 方法，此外还提供了equals
+、canEqual、hashCode、toString 方法
 
-@Setter：注解在属性上；为属性提供 setting 方法
+@Setter：注解在属性|类上；为属性提供 setting 方法
 
-@Getter：注解在属性上；为属性提供 getting 方法
+@Getter：注解在属性|类上；为属性提供 getting 方法
 
 @Log4j ：注解在类上；为类提供一个 属性名为log 的 log4j 日志对象
 
@@ -51,11 +57,8 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 # Lombok使用
 
-## val
-如果对其他的语言有研究的会发现，很多语言是使用 var 作为变量申明，val作为常量申明。这里的val也是这个作用。
-
-Val可以将变量申明是final类型。
-
+## val 
+[val详情](example/val.md)
 ~~~
 public String example() {
     val example = new ArrayList<String>();
@@ -76,8 +79,15 @@ public String example() {
 ~~~
 也就是类型推导啦。
 
-# @NonNull
-Null 即是罪恶
+## @NonNull
+
+您可以在方法的参数或构造函数的参数上使用@NonNull让lombok为您生成null-check语句。
+
+null-check语句类似
+~~~
+if (param == null) throw new NullPointerException("param is marked @NonNull but is null");
+~~~
+并将插入到方法的最顶层。对于构造函数，将在任何显式this（）或super（）调用之后立即插入空检查。
 
 ~~~
 public class NonNullExample extends Something {
@@ -105,8 +115,19 @@ public class NonNullExample extends Something {
 }
 ~~~
 
-# @Cleanup
+## @Cleanup
 自动化才是生产力
+
+Automatic resource management: Call your close() methods safely with no hassle.
+
+自动资源管理：安全地调用close（）方法
+
+可以使用 @Cleanup 注解注释任何局部变量，类似：
+
+@Cleanup InputStream in = new FileInputStream("some/file");
+ 
+（自动化的安全调用close()方法）
+
 
 ~~~
 public class CleanupExample {
@@ -151,10 +172,18 @@ public class CleanupExample {
 }
 ~~~
 
- JKD7里面就已经提供 `try with resource`
  
-## @Getter/@Setter
+## @Getter/@Setter 很实用的注解
 再也不写 `public int getFoo() {return foo;}`
+
+您可以使用@Getter和/或@Setter注释任何字段，让lombok自动生成默认的getter / setter。
+默认的getter只返回字段，如果字段名为foo，则命名为getFoo（如果字段的类型为boolean，则命名为isFoo）。
+
+除非您明确指定AccessLevel，否则生成的getter / setter方法将是公共的，如下面的示例所示。合法访问级别为PUBLIC，PROTECTED，PACKAGE和PRIVATE。
+
+您还可以在类上放置@Getter和/或@Setter注释。在这种情况下，就像使用注释注释该类中的所有非静态字段一样。
+
+您始终可以使用特殊的AccessLevel.NONE访问级别手动禁用任何字段的getter / setter生成。这使您可以覆盖类上的@Getter，@ Setter或@Data注释的行为。
 
 ~~~
 public class GetterSetterExample {
@@ -198,7 +227,15 @@ public class GetterSetterExample {
 ## @ToString
 
 默认的toString格式为：ClassName(fieldName= fieleValue ,fieldName1=fieleValue)。
-Debug Log 最强帮手
+
+任何类定义都可以用@ToString注释，让lombok生成toString（）方法的实现。
+默认情况下，它会按顺序打印您的类名以及每个字段，并以逗号分隔。
+
+通过将callSuper设置为true，可以将toString的父类实现的输出包含到输出中。
+
+可以通过@ ToString.Include（rank = -1）更改成员的打印顺序。
+没有等级的成员被认为具有等级0，更高等级的成员被首先打印，
+并且相同等级的成员以它们在源文件中出现的相同顺序被打印。
 
 ~~~
 @ToString(exclude="id")
@@ -256,11 +293,27 @@ public class ToStringExample {
   }
 }
 ~~~
-其实和 org.apache.commons.lang3.builder.ReflectionToStringBuilder 很像。
 
 ## @NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor
 这几个注解分别为类自动生成了无参构造器、指定参数的构造器和包含所有参数的构造器。
 
+
+@RequiredArgsConstructor为每个需要特殊处理的字段会生成单独的构造函数。
+所有未初始化的final字段都会获得一个参数，以及标记为@NonNull的任何字段。
+对于标有@NonNull的字段，还会生成显式空检查。
+如果用于标记为@NonNull的字段的任何参数包含null，则构造函数将抛出
+NullPointerException。参数的顺序与字段在类中的显示顺序相匹配。
+
+@RequiredArgsConstructor（staticName =“of”）。
+与普通构造函数不同，这种静态工厂方法意味着您的API用户可以编写MapEntry.of（“foo”，5）
+而不是更长的new MapEntry <String，Integer>（“foo”，5）。
+
+@NoArgsConstructor将生成一个无参构造函数。如果这是final类型的，将导致编译器错误，
+除非使用@NoArgsConstructor（force = true），然后使用0 / false / null初始化所有final字段。
+对于具有约束的字段，例如@NonNull字段，不会生成任何检查，因此请注意，在稍后正确初始化这些字段之前，
+通常不会满足这些约束。
+
+@AllArgsConstructor为类中的每个字段作为参数的构造函数。标有@NonNull的字段会导致对这些参数进行空检查。
 ~~~
 @RequiredArgsConstructor(staticName = "of")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -307,160 +360,125 @@ public class ConstructorExample<T> {
 }
 ~~~
 
-## @Data
-这个就相当的简单啦，因为我们发现@ToString, @EqualsAndHashCode, @Getter 都很常用，这个一个注解就相当于
-
+## EqualsAndHashCode
+自动生成equals&hashcode方法
 ~~~
-@ToString
+import lombok.EqualsAndHashCode;
+
 @EqualsAndHashCode
-@Getter(所有字段)
-@Setter (所有非final字段)
-@RequiredArgsConstructor
-~~~
-
-## @Value
-~~~
-@Value public class ValueExample {
-  String name;
-  @Wither(AccessLevel.PACKAGE) @NonFinal int age;
-  double score;
-  protected String[] tags;
-  
-  @ToString(includeFieldNames=true)
-  @Value(staticConstructor="of")
-  public static class Exercise<T> {
-    String name;
-    T value;
-  }
-}
-~~~
-翻译后：
-
-~~~
-public final class ValueExample {
-  private final String name;
-  private int age;
-  private final double score;
-  protected final String[] tags;
-  
-  @java.beans.ConstructorProperties({"name", "age", "score", "tags"})
-  public ValueExample(String name, int age, double score, String[] tags) {
-    this.name = name;
-    this.age = age;
-    this.score = score;
-    this.tags = tags;
-  }
+public class EqualsAndHashCodeExample {
+  private transient int transientVar = 10;
+  private String name;
+  private double score;
+  @EqualsAndHashCode.Exclude private Shape shape = new Square(5, 10);
+  private String[] tags;
+  @EqualsAndHashCode.Exclude private int id;
   
   public String getName() {
     return this.name;
   }
   
-  public int getAge() {
-    return this.age;
-  }
-  
-  public double getScore() {
-    return this.score;
-  }
-  
-  public String[] getTags() {
-    return this.tags;
-  }
-  
-  @java.lang.Override
-  public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof ValueExample)) return false;
-    final ValueExample other = (ValueExample)o;
-    final Object this$name = this.getName();
-    final Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-    if (this.getAge() != other.getAge()) return false;
-    if (Double.compare(this.getScore(), other.getScore()) != 0) return false;
-    if (!Arrays.deepEquals(this.getTags(), other.getTags())) return false;
-    return true;
-  }
-  
-  @java.lang.Override
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-    result = result * PRIME + this.getAge();
-    final long $score = Double.doubleToLongBits(this.getScore());
-    result = result * PRIME + (int)($score >>> 32 ^ $score);
-    result = result * PRIME + Arrays.deepHashCode(this.getTags());
-    return result;
-  }
-  
-  @java.lang.Override
-  public String toString() {
-    return "ValueExample(name=" + getName() + ", age=" + getAge() + ", score=" + getScore() + ", tags=" + Arrays.deepToString(getTags()) + ")";
-  }
-  
-  ValueExample withAge(int age) {
-    return this.age == age ? this : new ValueExample(name, age, score, tags);
-  }
-  
-  public static final class Exercise<T> {
-    private final String name;
-    private final T value;
+  @EqualsAndHashCode(callSuper=true)
+  public static class Square extends Shape {
+    private final int width, height;
     
-    private Exercise(String name, T value) {
-      this.name = name;
-      this.value = value;
-    }
-    
-    public static <T> Exercise<T> of(String name, T value) {
-      return new Exercise<T>(name, value);
-    }
-    
-    public String getName() {
-      return this.name;
-    }
-    
-    public T getValue() {
-      return this.value;
-    }
-    
-    @java.lang.Override
-    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof ValueExample.Exercise)) return false;
-      final Exercise<?> other = (Exercise<?>)o;
-      final Object this$name = this.getName();
-      final Object other$name = other.getName();
-      if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-      final Object this$value = this.getValue();
-      final Object other$value = other.getValue();
-      if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
-      return true;
-    }
-    
-    @java.lang.Override
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $name = this.getName();
-      result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-      final Object $value = this.getValue();
-      result = result * PRIME + ($value == null ? 43 : $value.hashCode());
-      return result;
-    }
-    
-    @java.lang.Override
-    public String toString() {
-      return "ValueExample.Exercise(name=" + getName() + ", value=" + getValue() + ")";
+    public Square(int width, int height) {
+      this.width = width;
+      this.height = height;
     }
   }
 }
 ~~~
-我们发现了 @Value 就是 @Data 的不可变版本。
+翻译后：
+~~~
+import java.util.Arrays;
+
+public class EqualsAndHashCodeExample {
+  private transient int transientVar = 10;
+  private String name;
+  private double score;
+  private Shape shape = new Square(5, 10);
+  private String[] tags;
+  private int id;
+  
+  public String getName() {
+    return this.name;
+  }
+  
+  @Override public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof EqualsAndHashCodeExample)) return false;
+    EqualsAndHashCodeExample other = (EqualsAndHashCodeExample) o;
+    if (!other.canEqual((Object)this)) return false;
+    if (this.getName() == null ? other.getName() != null : !this.getName().equals(other.getName())) return false;
+    if (Double.compare(this.score, other.score) != 0) return false;
+    if (!Arrays.deepEquals(this.tags, other.tags)) return false;
+    return true;
+  }
+  
+  @Override public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final long temp1 = Double.doubleToLongBits(this.score);
+    result = (result*PRIME) + (this.name == null ? 43 : this.name.hashCode());
+    result = (result*PRIME) + (int)(temp1 ^ (temp1 >>> 32));
+    result = (result*PRIME) + Arrays.deepHashCode(this.tags);
+    return result;
+  }
+  
+  protected boolean canEqual(Object other) {
+    return other instanceof EqualsAndHashCodeExample;
+  }
+  
+  public static class Square extends Shape {
+    private final int width, height;
+    
+    public Square(int width, int height) {
+      this.width = width;
+      this.height = height;
+    }
+    
+    @Override public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Square)) return false;
+      Square other = (Square) o;
+      if (!other.canEqual((Object)this)) return false;
+      if (!super.equals(o)) return false;
+      if (this.width != other.width) return false;
+      if (this.height != other.height) return false;
+      return true;
+    }
+    
+    @Override public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      result = (result*PRIME) + super.hashCode();
+      result = (result*PRIME) + this.width;
+      result = (result*PRIME) + this.height;
+      return result;
+    }
+    
+    protected boolean canEqual(Object other) {
+      return other instanceof Square;
+    }
+  }
+}
+~~~
+## @Data
+这个一个注解就相当于@RequiredArgsConstructor，@ToString, @EqualsAndHashCode, @Getter,@Setter@Value 的集合
+
+~~~
+ * @see Getter
+ * @see Setter
+ * @see RequiredArgsConstructor
+ * @see ToString
+ * @see EqualsAndHashCode
+ * @see lombok.Value
+~~~
 
 ## @Builder
 
-提供了一种比较推崇的构建值对象的方式。
+提供了一种构建对象的方式。
 ~~~
 @Builder
 public class BuilderExample {
@@ -545,52 +563,21 @@ public class BuilderExample {
   }
 }
 ~~~
-builder是现在比较推崇的一种构建值对象的方式。
 
 **生成器模式**
 
-## @SneakyThrows
-to RuntimeException 小助手
-
-~~~
-public class SneakyThrowsExample implements Runnable {
-  @SneakyThrows(UnsupportedEncodingException.class)
-  public String utf8ToString(byte[] bytes) {
-    return new String(bytes, "UTF-8");
-  }
-  
-  @SneakyThrows
-  public void run() {
-    throw new Throwable();
-  }
-}
-~~~
-翻译后
-
-~~~
-public class SneakyThrowsExample implements Runnable {
-  public String utf8ToString(byte[] bytes) {
-    try {
-      return new String(bytes, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw Lombok.sneakyThrow(e);
-    }
-  }
-  
-  public void run() {
-    try {
-      throw new Throwable();
-    } catch (Throwable t) {
-      throw Lombok.sneakyThrow(t);
-    }
-  }
-}
-~~~
-很好的隐藏了异常，有时候的确会有这样的烦恼，从某种程度上也是遵循的了 let is crash
-
 ## @Synchronized
-类似Java中的Synchronized 关键字，但是可以隐藏同步锁
+类似Java中的Synchronized 关键字，可以通过@Synchronized("value)显示指定锁的对象
+
+Synchronized关键字通过this锁定，但注释锁定在名为$lock的字段上，该字段是私有的。
+
+如果注释静态方法，则注释会锁定名为$ LOCK的静态字段。
+
+避免暴露你的锁，这样会避免不受你控制的其他代码也锁定这个对象，造成竞争条件 造成相关线程错误
+
+
 ~~~
+
 public class SynchronizedExample {
   private final Object readLock = new Object();
   
@@ -638,53 +625,6 @@ public class SynchronizedExample {
 }
 ~~~
 这个就比较简单直接添加了synchronized关键字就Ok啦。不过现在JDK也比较推荐的是 Lock 对象，这个可能用的不是特别多。
-
-## @Getter(lazy=true)
-节约是美德
-
-~~~
-public class GetterLazyExample {
-  @Getter(lazy=true) private final double[] cached = expensive();
-  
-  private double[] expensive() {
-    double[] result = new double[1000000];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = Math.asin(i);
-    }
-    return result;
-  }
-}
-~~~
-翻译后：
-
-~~~
-public class GetterLazyExample {
-  private final java.util.concurrent.AtomicReference<java.lang.Object> cached = new java.util.concurrent.AtomicReference<java.lang.Object>();
-  
-  public double[] getCached() {
-    java.lang.Object value = this.cached.get();
-    if (value == null) {
-      synchronized(this.cached) {
-        value = this.cached.get();
-        if (value == null) {
-          final double[] actualValue = expensive();
-          value = actualValue == null ? this.cached : actualValue;
-          this.cached.set(value);
-        }
-      }
-    }
-    return (double[])(value == this.cached ? null : value);
-  }
-  
-  private double[] expensive() {
-    double[] result = new double[1000000];
-    for (int i = 0; i < result.length; i++) {
-      result[i] = Math.asin(i);
-    }
-    return result;
-  }
-}
-~~~
 
 ## @Log
 再也不用写那些差不多的LOG啦
