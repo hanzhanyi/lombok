@@ -1,12 +1,10 @@
-package com.iqiyi.lombok.test;
+package com.iqiyi.lombok.impl;
 
-import com.iqiyi.lombok.impl.HelloWorld;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @SupportedAnnotationTypes("HelloWorld")
@@ -20,13 +18,14 @@ public class HelloWorldProcessorVersionTwo extends AbstractProcessor {
 
     /**
      * process是javac编译器在执行注解处理器代码时要调用的过程
-     * @param annotations 可获取到此注解处理器所要处理的注解集合
-     * @param roundEnv 访问到当前这个Round中的语法树节点，每个语法树节点在这里标识一个Element，在jdk6中的javax.lang.model包
-     *                 中定义了16类Element
+     *
+     * @param annotations   可获取到此注解处理器所要处理的注解集合
+     * @param roundEnv      访问到当前这个Round中的语法树节点，每个语法树节点在这里标识一个Element，在jdk6中的javax.lang.model包
+     *                      中定义了16类Element
      * @param processingEvn 常用的实例变量：在注解处理器初始化的时候创建，代表了注解处理器框架提供的一个上下文环境，要创建新的
      *                      代码、想编译器输出信息、获取其他工具类等都需要用到这个实例变量。
-     *  每一个注解处理器在运行时候都是单利的，如果不需要改变或生成语法树的内容，process()方法就可以返回一个为false的布尔值
-     *  通知编译器这个Round中的代码未发生变化，无需构造新的JAVACompiler实例，
+     *                      每一个注解处理器在运行时候都是单利的，如果不需要改变或生成语法树的内容，process()方法就可以返回一个为false的布尔值
+     *                      通知编译器这个Round中的代码未发生变化，无需构造新的JAVACompiler实例，
      * @return
      */
     @Override
@@ -45,11 +44,4 @@ public class HelloWorldProcessorVersionTwo extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
-    // 由注解处理器自动调用，其中ProcessingEnvironment类提供了很多实用的工具类：Filter，Types，Elements，Messager等
-    @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        LinkedHashSet<String> annotations = new LinkedHashSet<String>();
-        annotations.add(HelloWorld.class.getCanonicalName());
-        return annotations;
-    }
 }

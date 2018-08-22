@@ -10,7 +10,7 @@ public class HelloWorldProcessor extends AbstractProcessor {
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
-        super.init(processingEnv);
+        super.init(processingEnvironment);
     }
 
     @Override
