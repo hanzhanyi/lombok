@@ -2,7 +2,6 @@ package com.iqiyi.lombok;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-
 public class JavacTest {
     public static void main(String[] args) {
         JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
