@@ -13,6 +13,6 @@ public class JavacTest {
                 "-XprintProcessorInfo",
                 "-classpath", "C:\\Users\\hanzhanyi\\.m2\\repository\\org\\projectlombok\\lombok\\1.18.2\\lombok-1.18.2.jar",
                 "-d", ".",
-                "E:\\WorkSpace\\tset\\lombok\\src\\main\\java\\com\\iqiyi\\lombok\\annotations\\Getter.java");
+                "E:\\WorkSpace\\tset\\lombok\\src\\main\\java\\com\\iqiyi\\lombok\\Getter.java");
     }
 }
