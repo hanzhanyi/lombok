@@ -1,3 +1,12 @@
+### lombok处理流程大致为：
+
+- 定义编译期的注解
+
+- 利用JSR269 api(Pluggable Annotation Processing API )创建编译期的注解处理器
+
+- 利用tools.jar的javac api处理AST(抽象语法树)
+
+- 将功能注册进jar包
 
 ## 问题：
 ### 1.Lombok是如何对在编译过程进行影响的？
@@ -28,3 +37,13 @@ ECJ：startWith（org.eclipse.jdt.）
 通过handle注解的@HandlerPriority(value) 属性，在加载所有handle处理类时，
 获取value值，从而进行顺序操作。
 
+
+
+### 
+Messager主要是用来在编译期打log用的
+
+JavacTrees提供了待处理的抽象语法树
+
+TreeMaker封装了创建AST节点的一些方法
+
+Names提供了创建标识符的方法
