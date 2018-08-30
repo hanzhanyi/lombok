@@ -37,7 +37,8 @@ ECJ：startWith（org.eclipse.jdt.）
 通过handle注解的@HandlerPriority(value) 属性，在加载所有handle处理类时，
 获取value值，从而进行顺序操作。
 
-
+### 6.lombok通过Visitor设计模式进行处理多个注解不同type的处理方式。
+(Visitor 访问者模式)[https://blog.csdn.net/qq_29379115/article/details/78152002]
 
 ### 
 Messager主要是用来在编译期打log用的
