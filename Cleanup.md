@@ -5,15 +5,12 @@ Automatic resource management: Call your close() methods safely with no hassle.<
 可以使用 @Cleanup 注解注释任何局部变量，类似：<br>
 @Cleanup InputStream in = new FileInputStream("some/file");<br>
  
- 
-您可以使用@Cleanup确保在退出当前代码的作用域之前，自动清除给定资源。 
-你可以通过使用@Cleanup注释来注释任何局部变量声明，如下所示：
-@Cleanup InputStream in = new FileInputStream（“some / file”）;
-因此，在您所在范围的末尾，调用in.close（），通过try / finally进行构造运行此调用。 
+这样注释，@Cleanup确保在退出当前代码的作用域之前，自动清除给定资源。<br>
+可以在作用域的末尾，通过try / finally进行构造，并调用in.close（），清除资源。
 
-如果要清理的对象类型没有close（）方法，而是其他一些无参数方法，则可以指定此方法的名称，如下所示：
-@Cleanup（“dispose”），默认情况下，清除方法假定为close（）。 
-不能通过@Cleanup调用带有1个或多个参数的清理方法。
+
+如果要清理的对象类型没有close（）方法，而是其他一些无参数方法，则可以通过@Cleanup（“dispose”）指定此方法的名称，如下所示：<br>
+不过不能通过@Cleanup调用带有1个或多个参数的清理方法，也就是说只能调用无参清除方法。
 
 ~~~java
 public class CleanupExample {
