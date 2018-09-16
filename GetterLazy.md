@@ -1,11 +1,8 @@
 ## @Getter(lazy=true)
 
-这个注解的作用相当于缓存，就是我在第一次调用后这个值会一直存在，不在浪费资源去重复生成了
+相当于将这个变量作为本地缓存，在第一次访问时进行赋值，
+实现方式是线程安全的，使用的是经典的Double Check Lock样板代码。
   
-  
-使用了getter这个annotation可以在实际使用到cached的时候生成cached，同时，Lombok会自动去管理线程安全的问题，不会存在重复赋值的问题,
-可以替代经典的Double Check Lock样板代码。
-
 
 ```java
 import lombok.Getter;
