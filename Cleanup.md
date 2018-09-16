@@ -1,9 +1,16 @@
 ## @Cleanup
 
-Automatic resource management: Call your close() methods safely with no hassle.<br>
-自动资源管理：安全地调用close（）方法<br>
-可以使用 @Cleanup 注解注释任何局部变量，类似：<br>
-@Cleanup InputStream in = new FileInputStream("some/file");<br>
+Automatic resource management: Call your close() methods safely with no hassle.
+
+
+自动资源管理：安全地调用close（）方法
+
+
+可以使用 @Cleanup 注解注释任何局部变量，类似：
+
+
+@Cleanup InputStream in = new FileInputStream("some/file");
+
  
 这样注释，@Cleanup确保在退出当前代码的作用域之前，自动清除给定资源。<br>
 可以在作用域的末尾，通过try / finally进行构造，并调用in.close（），清除资源。
