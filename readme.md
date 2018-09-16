@@ -62,77 +62,17 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 ## @NonNull
 [NonNull详解](/NonNull.md)
 
-
 您可以在方法的参数或构造函数的参数上使用@NonNull让lombok为您生成null-check语句。
 
 ---
 
 ## @Cleanup
-自动化才是生产力
+[Cleanup详解](/Cleanup.md)
 
-Automatic resource management: Call your close() methods safely with no hassle.
-
-自动资源管理：安全地调用close（）方法
-
-可以使用 @Cleanup 注解注释任何局部变量，类似：
-
-@Cleanup InputStream in = new FileInputStream("some/file");
+自动化即生产力，安全地调用close（）方法
  
-（自动化的安全调用close()方法）
+---
 
-您可以使用@Cleanup确保在退出当前代码的作用域之前，自动清除给定资源。 
-你可以通过使用@Cleanup注释来注释任何局部变量声明，如下所示：
-@Cleanup InputStream in = new FileInputStream（“some / file”）;
-因此，在您所在范围的末尾，调用in.close（），通过try / finally进行构造运行此调用。 
-
-如果要清理的对象类型没有close（）方法，而是其他一些无参数方法，则可以指定此方法的名称，如下所示：
-@Cleanup（“dispose”），默认情况下，清除方法假定为close（）。 
-不能通过@Cleanup调用带有1个或多个参数的清理方法。
-
-~~~java
-public class CleanupExample {
-  public static void main(String[] args) throws IOException {
-    @Cleanup InputStream in = new FileInputStream(args[0]);
-    @Cleanup OutputStream out = new FileOutputStream(args[1]);
-    byte[] b = new byte[10000];
-    while (true) {
-      int r = in.read(b);
-      if (r == -1) break;
-      out.write(b, 0, r);
-    }
-  }
-}
-~~~
-翻译成 Java 程序是：
-
-~~~java
-public class CleanupExample {
-  public static void main(String[] args) throws IOException {
-    InputStream in = new FileInputStream(args[0]);
-    try {
-      OutputStream out = new FileOutputStream(args[1]);
-      try {
-        byte[] b = new byte[10000];
-        while (true) {
-          int r = in.read(b);
-          if (r == -1) break;
-          out.write(b, 0, r);
-        }
-      } finally {
-        if (out != null) {
-          out.close();
-        }
-      }
-    } finally {
-      if (in != null) {
-        in.close();
-      }
-    }
-  }
-}
-~~~
-
- 
 ## @Getter/@Setter 很实用的注解
 再也不写 `public int getFoo() {return foo;}`
 
