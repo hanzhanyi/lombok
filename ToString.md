@@ -63,7 +63,6 @@ public class ToStringExample {
 ```
 
 
-任何类定义都可以用@ToString注释，让lombok生成toString（）方法的实现。
 默认情况下，它会按顺序打印您的类名以及每个字段，并以逗号分隔。
 同时可以通过@ToString.Include（rank = -1）更改成员的打印顺序，
 默认是0，更高等级的成员被首先打印，相同等级按照出现顺序打印。
@@ -110,24 +109,12 @@ public class ToStringExample {
         return this.name;
     }
 
-    public String[] getTags() {
-        return this.tags;
-    }
-
-    public String getIqiyi() {
-        return this.iqiyi;
-    }
-
     public String toString() {
         return "ToStringExample(boss=" + this.iqiyi + ", tags=" + Arrays.deepToString(this.tags) + ", name=" + this.name + ")";
     }
 
     public static class ToStringGetterExample {
         private String student;
-
-        private ToStringGetterExample(ToStringExample var1) {
-            this.this$0 = var1;
-        }
 
         public String getStudent() {
             return this.student;
@@ -142,6 +129,8 @@ public class ToStringExample {
 
 数组通过Arrays.deepToString打印，这意味着包含自身的数组将导致StackOverflowErrors。
 这与ArrayList类似。
+
+![](/4.png)
 
 在属性上同时使用@ ToString.Exclude和@ ToString.Include，该字段属性将被排除在外。
 

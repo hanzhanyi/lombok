@@ -7,22 +7,17 @@ import lombok.ToString;
 /**
  * Created by hanzhanyi on 2018/8/20.
  */
-@Getter
-@ToString(doNotUseGetters = true)
+@ToString()
 public class ToStringExample {
+    private ToStringExample[] tse;
 
-    @ToString.Include(rank = -1)
-    private String name;
+    public static void main(String[] args) {
+        ToStringExample toStringExample = new ToStringExample();
 
-    @ToString.Include(rank = 0)
-    private String[] tags;
+        toStringExample.tse = new ToStringExample[1];
 
-    @ToString.Include(rank = 1, name = "boss")
-    private String iqiyi;
+        toStringExample.tse[0] = toStringExample;
 
-    @Getter
-    @ToString
-    public static class ToStringGetterExample{
-        private String student;
+        toStringExample.toString();
     }
 }
