@@ -12,7 +12,6 @@ import java.util.List;
  * Created by hanzhanyi on 2018/9/16.
  */
 @Value
-@Builder
 @JsonDeserialize(builder = JacksonExample.JacksonExampleBuilder.class)
 public class JacksonExample {
     @Singular
