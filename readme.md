@@ -60,42 +60,12 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 # Lombok使用
 
 ## @NonNull
-[NonNull](/NonNull.md)
+[NonNull详解](/NonNull.md)
+
+
 您可以在方法的参数或构造函数的参数上使用@NonNull让lombok为您生成null-check语句。
 
-null-check语句类似
-~~~
-if (param == null) throw new NullPointerException("param is marked @NonNull but is null");
-~~~
-并将插入到方法的最顶层。对于构造函数，将在任何显式this（）或super（）调用之后立即插入空检查。
-注意：lombok始终将为字段名标注@NonNull注释视为空检查的信号，会将所有自动生成的构造函数或方法参数都进行null-check语句检查
-如使用@Data
-
-~~~java
-public class NonNullExample extends Something {
-  private String name;
-  
-  public NonNullExample(@NonNull Person person) {
-    super("Hello");
-    this.name = person.getName();
-  }
-}
-~~~
-翻译成 Java 程序是：
-
-~~~java
-public class NonNullExample extends Something {
-  private String name;
-  
-  public NonNullExample(@NonNull Person person) {
-    super("Hello");
-    if (person == null) {
-      throw new NullPointerException("person");
-    }
-    this.name = person.getName();
-  }
-}
-~~~
+---
 
 ## @Cleanup
 自动化才是生产力
