@@ -126,83 +126,12 @@ public class GetterSetterExample {
 
 ## @ToString
 
-默认的toString格式为：ClassName(fieldName= fieleValue ,fieldName1=fieleValue)。
-不过可以通过设置lombok.toString.includeFieldNames=false使输出隐藏fieldName为
-ClassName( fieleValue ,fieleValue)
+[ToString详解](/ToString.md)
 
-默认情况下，将打印所有非静态字段。
-任何类定义都可以用@ToString注释，让lombok生成toString（）方法的实现。
-默认情况下，它会按顺序打印您的类名以及每个字段，并以逗号分隔。
+自动生成ToString方法。
 
-通过将callSuper设置为true，可以将toString的父类实现的输出到实现中。
+---
 
-@ ToString.Include（name =“some other name”）
-更改用于标识成员的名称，并且可以通过@ ToString.Include（rank = -1）更改成员的打印顺序，
-默认是0，更高等级的成员被首先打印，相同等级按照出现顺序打印。
-
-lombok.toString.doNotUseGetters<br>
-如果设置为true，则在生成toString方法时，lombok将直接访问字段，而不是使用getter（如果可用）
-
-数组通过Arrays.deepToString打印，这意味着包含自身的数组将导致StackOverflowErrors。
-但是，这种行为与ArrayList类似。
-
-
-~~~java
-@ToString(exclude="id")
-public class ToStringExample {
-  private static final int STATIC_VAR = 10;
-  private String name;
-  private Shape shape = new Square(5, 10);
-  private String[] tags;
-  private int id;
-  
-  public String getName() {
-    return this.getName();
-  }
-  
-  @ToString(callSuper=true, includeFieldNames=true)
-  public static class Square extends Shape {
-    private final int width, height;
-    
-    public Square(int width, int height) {
-      this.width = width;
-      this.height = height;
-    }
-  }
-}
-~~~
-翻译后：
-
-~~~java
-public class ToStringExample {
-  private static final int STATIC_VAR = 10;
-  private String name;
-  private Shape shape = new Square(5, 10);
-  private String[] tags;
-  private int id;
-  
-  public String getName() {
-    return this.getName();
-  }
-  
-  public static class Square extends Shape {
-    private final int width, height;
-    
-    public Square(int width, int height) {
-      this.width = width;
-      this.height = height;
-    }
-    
-    @Override public String toString() {
-      return "Square(super=" + super.toString() + ", width=" + this.width + ", height=" + this.height + ")";
-    }
-  }
-  
-  @Override public String toString() {
-    return "ToStringExample(" + this.getName() + ", " + this.shape + ", " + Arrays.deepToString(this.tags) + ")";
-  }
-}
-~~~
 ## @Getter(lazy=true)
 
 可以替代经典的Double Check Lock样板代码。

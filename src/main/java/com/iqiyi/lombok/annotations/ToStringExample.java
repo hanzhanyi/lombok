@@ -42,9 +42,6 @@ public class ToStringExample {
     }
 
     public static void main(String[] args) {
-//        ToStringExample toStringExample = new ToStringExample();
-//        toStringExample.toStringExamples = new ToStringExample[]{toStringExample};
-//        System.out.println(toStringExample.toString());
 
         ArrayList collection = new ArrayList();
         collection.add("123");
