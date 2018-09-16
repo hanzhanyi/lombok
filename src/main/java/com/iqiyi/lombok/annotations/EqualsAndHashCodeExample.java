@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 public class EqualsAndHashCodeExample {
     private transient int transientVar = 10;
     private String name;
-    private double score;
+    private Double score;
     @EqualsAndHashCode.Exclude
     private Shape shape = new Square(5, 10);
     private String[] tags;

@@ -68,6 +68,8 @@ null-check语句类似
 if (param == null) throw new NullPointerException("param is marked @NonNull but is null");
 ~~~
 并将插入到方法的最顶层。对于构造函数，将在任何显式this（）或super（）调用之后立即插入空检查。
+注意：lombok始终将为字段名标注@NonNull注释视为空检查的信号，会将所有自动生成的构造函数或方法参数都进行null-check语句检查
+如使用@Data
 
 ~~~java
 public class NonNullExample extends Something {
@@ -108,6 +110,14 @@ Automatic resource management: Call your close() methods safely with no hassle.
  
 （自动化的安全调用close()方法）
 
+您可以使用@Cleanup确保在退出当前代码的作用域之前，自动清除给定资源。 
+你可以通过使用@Cleanup注释来注释任何局部变量声明，如下所示：
+@Cleanup InputStream in = new FileInputStream（“some / file”）;
+因此，在您所在范围的末尾，调用in.close（），通过try / finally进行构造运行此调用。 
+
+如果要清理的对象类型没有close（）方法，而是其他一些无参数方法，则可以指定此方法的名称，如下所示：
+@Cleanup（“dispose”），默认情况下，清除方法假定为close（）。 
+不能通过@Cleanup调用带有1个或多个参数的清理方法。
 
 ~~~java
 public class CleanupExample {
@@ -207,15 +217,25 @@ public class GetterSetterExample {
 ## @ToString
 
 默认的toString格式为：ClassName(fieldName= fieleValue ,fieldName1=fieleValue)。
+不过可以通过设置lombok.toString.includeFieldNames=false使输出隐藏fieldName为
+ClassName( fieleValue ,fieleValue)
 
+默认情况下，将打印所有非静态字段。
 任何类定义都可以用@ToString注释，让lombok生成toString（）方法的实现。
 默认情况下，它会按顺序打印您的类名以及每个字段，并以逗号分隔。
 
-通过将callSuper设置为true，可以将toString的父类实现的输出包含到输出中。
+通过将callSuper设置为true，可以将toString的父类实现的输出到实现中。
 
-可以通过@ ToString.Include（rank = -1）更改成员的打印顺序。
-没有等级的成员被认为具有等级0，更高等级的成员被首先打印，
-并且相同等级的成员以它们在源文件中出现的相同顺序被打印。
+@ ToString.Include（name =“some other name”）
+更改用于标识成员的名称，并且可以通过@ ToString.Include（rank = -1）更改成员的打印顺序，
+默认是0，更高等级的成员被首先打印，相同等级按照出现顺序打印。
+
+lombok.toString.doNotUseGetters<br>
+如果设置为true，则在生成toString方法时，lombok将直接访问字段，而不是使用getter（如果可用）
+
+数组通过Arrays.deepToString打印，这意味着包含自身的数组将导致StackOverflowErrors。
+但是，这种行为与ArrayList类似。
+
 
 ~~~java
 @ToString(exclude="id")
@@ -273,6 +293,61 @@ public class ToStringExample {
   }
 }
 ~~~
+## @Getter(lazy=true)
+
+可以替代经典的Double Check Lock样板代码。
+这个注解的作用相当于缓存，就是我在第一次调用后这个值会一直存在，不在浪费资源去重复生成了
+  
+  
+ 使用了getter这个annotation可以在实际使用到cached的时候生成cached，同时，Lombok会自动去管理线程安全的问题，不会存在重复赋值的问题
+
+```java
+import lombok.Getter;
+
+public class GetterLazyExample {
+  @Getter(lazy=true) private final double[] cached = expensive();
+  
+  private double[] expensive() {
+    double[] result = new double[1000000];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = Math.asin(i);
+    }
+    return result;
+  }
+}
+```
+翻译后：
+```java
+
+ public class GetterLazyExample {
+  private final java.util.concurrent.AtomicReference<java.lang.Object> cached = new java.util.concurrent.AtomicReference<java.lang.Object>();
+  
+  public double[] getCached() {
+    java.lang.Object value = this.cached.get();
+    if (value == null) {
+      synchronized(this.cached) {
+        value = this.cached.get();
+        if (value == null) {
+          final double[] actualValue = expensive();
+          value = actualValue == null ? this.cached : actualValue;
+          this.cached.set(value);
+        }
+      }
+    }
+    return (double[])(value == this.cached ? null : value);
+  }
+  
+  private double[] expensive() {
+    double[] result = new double[1000000];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = Math.asin(i);
+    }
+    return result;
+  }
+}
+```
+
+---
 
 ## @NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor
 这几个注解分别为类自动生成了无参构造器、指定参数的构造器和包含所有参数的构造器。
@@ -341,7 +416,29 @@ public class ConstructorExample<T> {
 ~~~
 
 ## EqualsAndHashCode
-自动生成equals&hashcode方法
+自动生成equals&hashcode方法<br>
+原文中提到的大致有以下几点：<br>
+1. 此注解会生成equals(Object other) 和 hashCode()方法。<br>
+2. 它默认使用非静态，非瞬态的属性<br>
+3. 可通过参数exclude排除一些属性<br>
+4. 可通过参数of指定仅使用哪些属性<br>
+5. 它默认仅使用该类中定义的属性且不调用父类的方法<br>
+6. 可通过callSuper=true解决上一点问题。让其生成的方法中调用父类的方法。<br>
+
+另：@Data相当于@Getter @Setter @RequiredArgsConstructor @ToString @EqualsAndHashCode这5个注解的合集。
+
+
+通过官方文档，可以得知，当使用@Data注解时，则有了@EqualsAndHashCode注解，那么就会在此类中存在equals(Object other) 和 hashCode()方法，且不会使用父类的属性，这就导致了可能的问题。<br>
+比如，有多个类有相同的部分属性，把它们定义到父类中，恰好id（数据库主键）也在父类中，那么就会存在部分对象在比较时，它们并不相等，却因为lombok自动生成的equals(Object other) 和 hashCode()方法判定为相等，从而导致出错。<br>
+
+修复此问题的方法很简单：<br>
+1. 使用@Getter @Setter @ToString代替@Data并且自定义equals(Object other) 和 hashCode()方法，比如有些类只需要判断主键id是否相等即足矣。<br>
+2. 或者使用在使用@Data时同时加上@EqualsAndHashCode(callSuper=true)注解。<br>
+
+lombok.equalsAndHashCode.doNotUseGetters同样可以指定是否使用get语句获取对象
+同样这种比较时，数组使用的也是Arrays.deepHashCode()，引用不当也会造成StackOverflowErrors
+
+对于float和double类型保留两位浮点数进行判断
 ~~~java
 import lombok.EqualsAndHashCode;
 
@@ -443,6 +540,7 @@ public class EqualsAndHashCodeExample {
     }
   }
 }
+
 ~~~
 ## @Data
 这个一个注解就相当于@RequiredArgsConstructor，@ToString, @EqualsAndHashCode, @Getter,@Setter@Value 的集合
@@ -543,6 +641,150 @@ public class BuilderExample {
   }
 }
 ~~~
+---
+## @Value
+
+相当于final类型的Data注解
+ @Value: @ToString, @EqualsAndHashCode, @AllArgsConstructor, @FieldDefaults, and @Getter.
+```java
+
+@Value public class ValueExample {
+  String name;
+  @Wither(AccessLevel.PACKAGE) @NonFinal int age;
+  double score;
+  protected String[] tags;
+  
+  @ToString(includeFieldNames=true)
+  @Value(staticConstructor="of")
+  public static class Exercise<T> {
+    String name;
+    T value;
+  }
+}
+```
+翻译后：
+
+```java
+public final class ValueExample {
+  private final String name;
+  private int age;
+  private final double score;
+  protected final String[] tags;
+  
+  @java.beans.ConstructorProperties({"name", "age", "score", "tags"})
+  public ValueExample(String name, int age, double score, String[] tags) {
+    this.name = name;
+    this.age = age;
+    this.score = score;
+    this.tags = tags;
+  }
+  
+  public String getName() {
+    return this.name;
+  }
+  
+  public int getAge() {
+    return this.age;
+  }
+  
+  public double getScore() {
+    return this.score;
+  }
+  
+  public String[] getTags() {
+    return this.tags;
+  }
+  
+  @java.lang.Override
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ValueExample)) return false;
+    final ValueExample other = (ValueExample)o;
+    final Object this$name = this.getName();
+    final Object other$name = other.getName();
+    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (this.getAge() != other.getAge()) return false;
+    if (Double.compare(this.getScore(), other.getScore()) != 0) return false;
+    if (!Arrays.deepEquals(this.getTags(), other.getTags())) return false;
+    return true;
+  }
+  
+  @java.lang.Override
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $name = this.getName();
+    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + this.getAge();
+    final long $score = Double.doubleToLongBits(this.getScore());
+    result = result * PRIME + (int)($score >>> 32 ^ $score);
+    result = result * PRIME + Arrays.deepHashCode(this.getTags());
+    return result;
+  }
+  
+  @java.lang.Override
+  public String toString() {
+    return "ValueExample(name=" + getName() + ", age=" + getAge() + ", score=" + getScore() + ", tags=" + Arrays.deepToString(getTags()) + ")";
+  }
+  
+  ValueExample withAge(int age) {
+    return this.age == age ? this : new ValueExample(name, age, score, tags);
+  }
+  
+  public static final class Exercise<T> {
+    private final String name;
+    private final T value;
+    
+    private Exercise(String name, T value) {
+      this.name = name;
+      this.value = value;
+    }
+    
+    public static <T> Exercise<T> of(String name, T value) {
+      return new Exercise<T>(name, value);
+    }
+    
+    public String getName() {
+      return this.name;
+    }
+    
+    public T getValue() {
+      return this.value;
+    }
+    
+    @java.lang.Override
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof ValueExample.Exercise)) return false;
+      final Exercise<?> other = (Exercise<?>)o;
+      final Object this$name = this.getName();
+      final Object other$name = other.getName();
+      if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+      final Object this$value = this.getValue();
+      final Object other$value = other.getValue();
+      if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
+      return true;
+    }
+    
+    @java.lang.Override
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $name = this.getName();
+      result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+      final Object $value = this.getValue();
+      result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+      return result;
+    }
+    
+    @java.lang.Override
+    public String toString() {
+      return "ValueExample.Exercise(name=" + getName() + ", value=" + getValue() + ")";
+    }
+  }
+}
+```
+---
 
 **生成器模式**
 
@@ -551,7 +793,9 @@ public class BuilderExample {
 
 Synchronized关键字通过this锁定，但注释锁定在名为$lock的字段上，该字段是私有的。
 
-如果注释静态方法，则注释会锁定名为$ LOCK的静态字段。
+如果是一个普通方法的话会生成一个普通常量，类型为Object
+
+如果注释static方法，则注释会锁定名为$ LOCK的静态字段。
 
 避免暴露你的锁，这样会避免不受你控制的其他代码也锁定这个对象，造成竞争条件 造成相关线程错误
 
@@ -606,8 +850,46 @@ public class SynchronizedExample {
 ~~~
 这个就比较简单直接添加了synchronized关键字就Ok啦。不过现在JDK也比较推荐的是 Lock 对象，这个可能用的不是特别多。
 
+---
+## @SneakyThrows
+
+自动化抛出异常，官网不建议使用，不作讲解
+
+---
 ## @Log
 再也不用写那些差不多的LOG啦
+可以手动指定对应的topicname。
+@CommonsLog
+Creates private static final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(LogExample.class);
+
+
+@Flogger
+Creates private static final com.google.common.flogger.FluentLogger log = com.google.common.flogger.FluentLogger.forEnclosingClass();
+
+
+@JBossLog
+Creates private static final org.jboss.logging.Logger log = org.jboss.logging.Logger.getLogger(LogExample.class);
+
+
+@Log
+Creates private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogExample.class.getName());
+
+
+@Log4j
+Creates private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LogExample.class);
+
+
+@Log4j2
+Creates private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(LogExample.class);
+
+
+@Slf4j
+Creates private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LogExample.class);
+
+
+@XSlf4j
+Creates private static final org.slf4j.ext.XLogger log = org.slf4j.ext.XLoggerFactory.getXLogger(LogExample.class);
+
 
 ~~~java
 @Log
