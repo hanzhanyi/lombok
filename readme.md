@@ -341,8 +341,13 @@ public class SynchronizedExample {
 
 ---
 ## @Log
+
 再也不用写那些差不多的LOG啦
+
+
 可以手动指定对应的topicname。
+
+
 @CommonsLog
 Creates private static final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(LogExample.class);
 
