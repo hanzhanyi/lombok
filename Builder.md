@@ -7,12 +7,17 @@
 
 
 Person.builder().name("Adam Savage").city("San Francisco").job("Mythbusters").job("Unchained Reaction").build();<br>
+
+
 它把我们的Bean类包装为一个构建者模式，编译时增加了一个Builder内部类和全字段的构造器。<br>
 
 - @Builder可以放在类，构造函数或方法上。<br> 
 
 1.@Builder放在构造函数/方法，会对方法参数生成字段。<br>
+
+
 2.@Builder放在类上，类似您将@AllArgsConstructor（access = AccessLevel.PACKAGE）添加到类中并将@Builder注释应用于此all-args构造函数。<br>
+
 
 ```java
 @Builder(toBuilder = true)
@@ -97,16 +102,39 @@ public class BuilderExample {
 - @Builder可配置@singular参数，可对集合进行赋值。
 
 ```java
-private String [] jobs;
-Person.builder().job("Mythbusters").job("Unchained Reaction").build(); 可以使用这种方式对集合进行赋值
+@Builder
+@ToString
+public class BuilderExample {
+    private String name;
+
+    @Singular("iqiyi")
+    private SortedMap<String, Object> iqiyis;
+
+    public static void main(String[] args) {
+        System.out.println(BuilderExample.builder()
+                .iqiyi("key", "value")
+                .iqiyi("boss", "bossValue")
+                .build().toString());
+    }
+}
 ```
 
+```text
+BuilderExample(name=null, iqiyis={boss=bossValue, key=value})
+```
 
 - @Builder(builderClassName = "HelloWorldBuilder", buildMethodName = "execute", builderMethodName = "helloWorld", toBuilder = true)
 
+
 1.构建器的类名（默认值：返回类型+'Builder'）
+
+
 2.build（）方法的名称（默认值：“build”）
+
+
 3.builder（）方法的名称（默认值：“builder”）
+
+
 4.如果你想要toBuilder（）（默认值：no）
 
 
