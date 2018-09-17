@@ -15,6 +15,9 @@ import java.util.SortedMap;
 public class BuilderExample {
     private String name;
 
+    @Builder.Default
+    private String boss = "boss";
+
     @Singular("iqiyi")
     private SortedMap<String, Object> iqiyis;
 

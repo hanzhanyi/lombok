@@ -50,10 +50,15 @@ public class Getter {
 }
 ```
 
-扩展配置：
+扩展配置：<br>
+
+
 lombok.accessors.chain = [true | false] (default: false)如果设置为true，生成的setter将返回this(而不是void)，即可通过User user=new User().setAge(31).setName("pollyduan")，类似这种形式，通过这个配置我们可以像jquery一样愉快的链式编程了。可以在类加增加一个@Accessors 注解 配置chain属性，优先于全局配置。
 
+
 lombok.accessors.fluent = [true | false] (default: false)不再使用Set/Get前缀，只是使用字段名作为方法名。
+
+
 ```java
 @Getter
 @Setter

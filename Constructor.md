@@ -33,7 +33,7 @@ public class NoArgsConstructorExample {
 
 
 ## @AllArgsConstructor
-为类中所有参数（排除static）进行构造参数的生成。标有@NonNull的字段会导致对这些参数进行空检查。
+为类中所有参数（排除赋值的final）进行构造参数的生成。标有@NonNull的字段会导致对这些参数进行空检查。
 
 ```java
 @AllArgsConstructor
