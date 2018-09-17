@@ -1,5 +1,5 @@
 ## @NonNull
-
+|
 可以在方法参数或者构造参数上使用 **@NonNull** 注解，让lombok为您生成null-chekc语句，并将插入到方法的最顶层.
 如果为空，则抛出NullPointerException。
 null-check语句类似

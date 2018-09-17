@@ -67,12 +67,6 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 ---
 
-## @Cleanup
-[Cleanup详解](/Cleanup.md)
-
-自动化即生产力，安全地调用close（）方法
- 
----
 
 ## @Getter/@Setter 很实用的注解
 
@@ -127,6 +121,14 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 Person.builder().name("Adam Savage").city("San Francisco").job("Mythbusters").job("Unchained Reaction").build();
 
 ---
+
+## @Cleanup
+[Cleanup详解](/Cleanup.md)
+
+自动化即生产力，安全地调用close（）方法
+ 
+---
+
 ## @Value
 
 相当于final类型的Data注解
