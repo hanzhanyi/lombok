@@ -347,7 +347,7 @@ public class SynchronizedExample {
 
 可以手动指定对应的topicname。
 
-
+```java
 @CommonsLog
 Creates private static final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(LogExample.class);
 
@@ -378,6 +378,8 @@ Creates private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getL
 
 @XSlf4j
 Creates private static final org.slf4j.ext.XLogger log = org.slf4j.ext.XLoggerFactory.getXLogger(LogExample.class);
+
+```
 
 
 ~~~java
