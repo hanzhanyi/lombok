@@ -2,7 +2,7 @@
 @Getter and @Setter
 
 此注解可标注在类和成员变量上。标注在类上时，表示自动生成所有非静态字段，final也会自动生成get方法，但不会生成Set方法。
-如果是boolean类型，方法命名isFoo开头,如果变量以isXXX开头，则生成的get方法为isXXX(),set方法为getXXX(),所以不要以is开头设置变量
+如果是boolean类型，方法命名isFoo开头,如果变量以isXXX开头，则生成的get方法为isXXX(),set方法为setXXX(),所以不要以is开头设置变量
 也可以通过设置lombok.getter.noIsPrefix = true
 将方法名改成getFoo();
 
