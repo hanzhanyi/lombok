@@ -1,7 +1,9 @@
 
 ## @Builder
 
-@Builder使用构建者模式，允许您使用以下代码自动生成使您的类可实例化所需的代码<br>
+@Builder使用构建者模式
+
+允许您使用以下代码自动生成使您的类可实例化所需的代码
 
 
 Person.builder().name("Adam Savage").city("San Francisco").job("Mythbusters").job("Unchained Reaction").build();<br>
