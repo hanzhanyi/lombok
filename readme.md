@@ -29,8 +29,6 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 [官方文档](https://www.projectlombok.org/features/all)
 
 ~~~
-@Data   ：注解在类上；提供类所有属性的 getting 和 setting 方法，此外还提供了equals
-、canEqual、hashCode、toString 方法
 
 @Setter：注解在属性|类上；为属性提供 setting 方法
 
@@ -43,6 +41,9 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 @RequiredArgsConstructor :注解在类上；为类的特殊字段提供一个构造方法
 
 @AllArgsConstructor：注解在类上；为类提供一个全参的构造方法
+
+@Data   ：注解在类上；提供类所有属性的 getting 和 setting 方法，此外还提供了equals
+、canEqual、hashCode、toString 方法
 
 @Clearup: 自动管理资源
 
