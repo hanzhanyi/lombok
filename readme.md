@@ -34,7 +34,7 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 @Getter：注解在属性|类上；为属性提供 getting 方法
 
-@Log4j ：注解在类上；为类提供一个 属性名为log 的 log4j 日志对象
+@Log ：注解在类上；为类提供一个 属性名为log 的 log4j 日志对象
 
 @NoArgsConstructor：注解在类上；为类提供一个无参的构造方法
 
