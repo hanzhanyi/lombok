@@ -105,7 +105,7 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 ---
 
-## EqualsAndHashCode
+## @EqualsAndHashCode
 
 [EqualsAndHashCode详解](/EqualsAndHashCode.md)
 
