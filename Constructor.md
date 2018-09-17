@@ -4,7 +4,6 @@
 
 ---
 
-
 ## @NoArgsConstructor
 
 此注解自动生成一个无参构造器，如果类中存在未赋值的final类型变量，则会编译报错。
@@ -18,7 +17,6 @@ public class NoArgsConstructorExample {
     private final String name;
     
     private String studentName;
-
 }
 ```
 ```java

@@ -16,6 +16,10 @@ public class BuilderExample {
     private String name;
     private int age;
 
+    private final String hanzhanyi = null;
+
+    private static String boss;
+
     public String student;
 
     @Singular
@@ -23,7 +27,7 @@ public class BuilderExample {
 
     public static void main(String[] args) {
 
-        BuilderExample example =  BuilderExample.builder().occupation("hanzhanyi").occupation("hanzhanyi1").age(2).build();
+        BuilderExample example = BuilderExample.builder().occupation("hanzhanyi").occupation("hanzhanyi1").age(2).build();
         System.out.println(example.toBuilder().occupation("linzhongbailang").build());
 
     }
