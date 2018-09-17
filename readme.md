@@ -114,7 +114,7 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 ---
 
 ## @Data
-这个一个注解就相当于@RequiredArgsConstructor，@ToString, @EqualsAndHashCode, @Getter,@Setter @Value 的集合
+这个一个注解就相当于@ToString, @EqualsAndHashCode, @Getter ,@Setter（non-final），@RequiredArgsConstructor的集合。
 
 ---
 
