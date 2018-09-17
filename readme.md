@@ -76,6 +76,14 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 ---
 
+## @Getter(lazy=true)
+
+[GetterLazy详解](/GetterLazy.md)
+
+这个注解的作用相当于缓存，就是我在第一次调用后这个值会一直存在，不在浪费资源去重复生成了
+
+---
+
 ## @ToString
 
 [ToString详解](/ToString.md)
@@ -84,13 +92,6 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 
 ---
 
-## @Getter(lazy=true)
-
-[GetterLazy详解](/GetterLazy.md)
-
-这个注解的作用相当于缓存，就是我在第一次调用后这个值会一直存在，不在浪费资源去重复生成了
-
----
 
 ## @NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor
 
