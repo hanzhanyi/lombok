@@ -9,20 +9,98 @@ Person.builder().name("Adam Savage").city("San Francisco").job("Mythbusters").jo
 
 - @Builder可以放在类，构造函数或方法上。<br> 
 
-
 1.@Builder放在构造函数/方法，会对方法参数生成字段。<br>
 2.@Builder放在类上，类似您将@AllArgsConstructor（access = AccessLevel.PACKAGE）添加到类中并将@Builder注释应用于此all-args构造函数。<br>
 
+```java
+@Builder(toBuilder = true)
+@ToString
+public class BuilderExample {
+    private String name;
 
+    private String iqiyi;
+
+    private static String boss;
+
+    private final String zq;
+
+    public static void main(String[] args) {
+        System.out.println(BuilderExample.builder().name("name").zq("zq").build());
+    }
+}
+```
+
+```java
+public class BuilderExample {
+    private String name;
+    private String iqiyi;
+    private static String boss;
+    private final String zq;
+
+    public static void main(String[] args) {
+        System.out.println(builder().name("name").zq("zq").build());
+    }
+
+    BuilderExample(String name, String iqiyi, String zq) {
+        this.name = name;
+        this.iqiyi = iqiyi;
+        this.zq = zq;
+    }
+
+    public static BuilderExample.BuilderExampleBuilder builder() {
+        return new BuilderExample.BuilderExampleBuilder();
+    }
+
+    public BuilderExample.BuilderExampleBuilder toBuilder() {
+        return (new BuilderExample.BuilderExampleBuilder()).name(this.name).iqiyi(this.iqiyi).zq(this.zq);
+    }
+
+    public String toString() {
+        return "BuilderExample(name=" + this.name + ", iqiyi=" + this.iqiyi + ", zq=" + this.zq + ")";
+    }
+
+    public static class BuilderExampleBuilder {
+        private String name;
+        private String iqiyi;
+        private String zq;
+
+        BuilderExampleBuilder() {
+        }
+
+        public BuilderExample.BuilderExampleBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public BuilderExample.BuilderExampleBuilder iqiyi(String iqiyi) {
+            this.iqiyi = iqiyi;
+            return this;
+        }
+
+        public BuilderExample.BuilderExampleBuilder zq(String zq) {
+            this.zq = zq;
+            return this;
+        }
+
+        public BuilderExample build() {
+            return new BuilderExample(this.name, this.iqiyi, this.zq);
+        }
+
+        public String toString() {
+            return "BuilderExample.BuilderExampleBuilder(name=" + this.name + ", iqiyi=" + this.iqiyi + ", zq=" + this.zq + ")";
+        }
+    }
+}
+```
 - @Builder可配置@singular参数，可对集合进行赋值。
 
-
-private String [] jobs;<br>
+```java
+private String [] jobs;
 Person.builder().job("Mythbusters").job("Unchained Reaction").build(); 可以使用这种方式对集合进行赋值
+```
 
 
 - @Builder(builderClassName = "HelloWorldBuilder", buildMethodName = "execute", builderMethodName = "helloWorld", toBuilder = true)
-
 
 1.构建器的类名（默认值：返回类型+'Builder'）
 2.build（）方法的名称（默认值：“build”）
