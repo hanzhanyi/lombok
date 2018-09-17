@@ -74,55 +74,12 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 ---
 
 ## @Getter/@Setter 很实用的注解
-再也不写 `public int getFoo() {return foo;}`
 
-您可以使用@Getter和/或@Setter注释任何字段，让lombok自动生成默认的getter / setter。
-默认的getter只返回字段，如果字段名为foo，则命名为getFoo（如果字段的类型为boolean，则命名为isFoo）。
+[Getter/Setter详解](/GetterSetter.md)
 
-除非您明确指定AccessLevel，否则生成的getter / setter方法将是公共的，如下面的示例所示。合法访问级别为PUBLIC，PROTECTED，PACKAGE和PRIVATE。
+自动生成@Getter/@Setter注解
 
-您还可以在类上放置@Getter和/或@Setter注释。在这种情况下，就像使用注释注释该类中的所有非静态字段一样。
-
-您始终可以使用特殊的AccessLevel.NONE访问级别手动禁用任何字段的getter / setter生成。这使您可以覆盖类上的@Getter，@ Setter或@Data注释的行为。
-
-~~~java
-public class GetterSetterExample {
-
-  @Getter @Setter private int age = 10;
-  
-  @Setter(AccessLevel.PROTECTED) private String name;
-  
-  @Override public String toString() {
-    return String.format("%s (age: %d)", name, age);
-  }
-}
-~~~
-翻译成 Java 程序是：
-
-~~~java
-public class GetterSetterExample {
-
-  private int age = 10;
-
-  private String name;
-  
-  @Override public String toString() {
-    return String.format("%s (age: %d)", name, age);
-  }
-  
-  public int getAge() {
-    return age;
-  }
-  
-  public void setAge(int age) {
-    this.age = age;
-  }
- 
-  protected void setName(String name) {
-    this.name = name;
-  }
-}
-~~~~
+---
 
 ## @ToString
 
