@@ -2,22 +2,33 @@
 ## @Builder
 
 @Builder使用构建者模式，允许您使用以下代码自动生成使您的类可实例化所需的代码<br>
+
+
 Person.builder().name("Adam Savage").city("San Francisco").job("Mythbusters").job("Unchained Reaction").build();<br>
 它把我们的Bean类包装为一个构建者模式，编译时增加了一个Builder内部类和全字段的构造器。<br>
 
 - @Builder可以放在类，构造函数或方法上。<br> 
+
+
 1.@Builder放在构造函数/方法，会对方法参数生成字段。<br>
 2.@Builder放在类上，类似您将@AllArgsConstructor（access = AccessLevel.PACKAGE）添加到类中并将@Builder注释应用于此all-args构造函数。<br>
 
+
 - @Builder可配置@singular参数，可对集合进行赋值。
+
+
 private String [] jobs;<br>
 Person.builder().job("Mythbusters").job("Unchained Reaction").build(); 可以使用这种方式对集合进行赋值
 
+
 - @Builder(builderClassName = "HelloWorldBuilder", buildMethodName = "execute", builderMethodName = "helloWorld", toBuilder = true)
+
+
 1.构建器的类名（默认值：返回类型+'Builder'）
 2.build（）方法的名称（默认值：“build”）
 3.builder（）方法的名称（默认值：“builder”）
 4.如果你想要toBuilder（）（默认值：no）
+
 
 注意：如果在字段上进行初始化赋值，则需要添加@Builder.Default:
 
