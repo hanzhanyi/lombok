@@ -1,6 +1,7 @@
 package com.iqiyi.lombok.annotations;
 
 import com.iqiyi.lombok.entity.Shape;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
