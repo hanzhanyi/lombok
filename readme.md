@@ -100,6 +100,7 @@ Lombok是一款Java开发插件，使得Java开发者可以通过其定义的一
 ## @NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor
 
 [Constructor详解](/Constructor.md)
+
 这几个注解分别生成无参构造器、指定参数构造器、包含所有参数的构造器。
 
 ---

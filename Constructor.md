@@ -1,75 +1,110 @@
 ## @NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor
 
-[Constructor详解](/Constructor.md)
-这几个注解分别为类自动生成了无参构造器、指定参数的构造器和包含所有参数的构造器。
-
 这三个注解都会忽略static变量
 
-@RequiredArgsConstructor为每个需要特殊处理的字段会生成单独的构造函数（未初始化的final字段
-以及@NonNull字段）。所有未初始化的final字段都会获得一个参数，以及标记为@NonNull未声明的任何字段。
-对于标记有的字段@NonNull，还会生成显式空检查。构造函数将抛出一个
-NullPointerExceptionif用于标记为@NonNullcontains 的字段的任何参数null。
+## @NoArgsConstructor
+
+此注解自动生成一个无参构造器，如果类中存在未赋值的final类型变量，则会编译报错。
+
+但可通过@NoArgsConstructor（force = true），使用0 / false / null初始化所有final字段
+
+```java
+@NoArgsConstructor(force = true)
+public class NoArgsConstructorExample {
+    
+    private final String name;
+    
+    private String studentName;
+
+}
+```
+```java
+public class NoArgsConstructorExample {
+    private final String name = null;
+    private String studentName;
+
+    public NoArgsConstructorExample() {
+    }
+}
+```
+
+## @AllArgsConstructor
+为类中所有参数（排除static）进行构造参数的生成。标有@NonNull的字段会导致对这些参数进行空检查。
+
+```java
+@AllArgsConstructor
+public class AllArgsConstructorExample {
+    private String name ;
+    private static String  hanzhanyi;
+    private final String iqiyi;
+}
+```
+```java
+public class AllArgsConstructorExample {
+    private String name;
+    private static String hanzhanyi;
+    private final String iqiyi;
+
+    public AllArgsConstructorExample(String name, String iqiyi) {
+        this.name = name;
+        this.iqiyi = iqiyi;
+    }
+}
+```
+
+## @RequiredArgsConstructor
+
+
+@RequiredArgsConstructor为每个未初始化的final字段以及@NonNull字段生成构造方法。
+
+
 参数的顺序与字段在类中的显示顺序相匹配。
 
-所有未初始化的final字段都会获得一个参数，以及标记为@NonNull的任何字段。
-对于标有@NonNull的字段，还会生成显式空检查。
-如果用于标记为@NonNull的字段的任何参数包含null，则构造函数将抛出
-NullPointerException。参数的顺序与字段在类中的显示顺序相匹配。
 
 @RequiredArgsConstructor（staticName =“of”）。
 与普通构造函数不同，这种静态工厂方法意味着您的API用户可以编写MapEntry.of（“foo”，5）
 而不是更长的new MapEntry <String，Integer>（“foo”，5）。
+
 @RequiredArgsConstructor(staticName = “of”)会生成一个of()的静态方法，并把构造方法设置为私有的
 
-
-@NoArgsConstructor将生成一个无参构造函数。如果这是final类型的，将导致编译器错误，
-除非使用@NoArgsConstructor（force = true），然后使用0 / false / null初始化所有final字段。
-对于具有约束的字段，例如@NonNull字段，不会生成任何检查，因此请注意，在稍后正确初始化这些字段之前，
-通常不会满足这些约束。
-
-@AllArgsConstructor为类中的每个字段作为参数的构造函数。标有@NonNull的字段会导致对这些参数进行空检查。
 ~~~java
-@RequiredArgsConstructor(staticName = "of")
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ConstructorExample<T> {
-  private int x, y;
-  @NonNull private T description;
-  
-  @NoArgsConstructor
-  public static class NoArgsExample {
-    @NonNull private String field;
-  }
+@RequiredArgsConstructor(staticName = "of", access = AccessLevel.PROTECTED)
+public class RequiredArgsConstructorExample {
+    private String name;
+
+    @NonNull
+    private String forestWolf;
+
+    private final String iqiyi = "iqiyi";
+    
+    @NonNull
+    private final String boss;
 }
 ~~~
 翻译后：
 
 ~~~java
-public class ConstructorExample<T> {
-  private int x, y;
-  @NonNull private T description;
-  
-  private ConstructorExample(T description) {
-    if (description == null) throw new NullPointerException("description");
-    this.description = description;
-  }
-  
-  public static <T> ConstructorExample<T> of(T description) {
-    return new ConstructorExample<T>(description);
-  }
-  
-  @java.beans.ConstructorProperties({"x", "y", "description"})
-  protected ConstructorExample(int x, int y, T description) {
-    if (description == null) throw new NullPointerException("description");
-    this.x = x;
-    this.y = y;
-    this.description = description;
-  }
-  
-  public static class NoArgsExample {
-    @NonNull private String field;
-    
-    public NoArgsExample() {
+public class RequiredArgsConstructorExample {
+    private String name;
+    @NonNull
+    private String forestWolf;
+    private final String iqiyi = "iqiyi";
+    @NonNull
+    private final String boss;
+
+    private RequiredArgsConstructorExample(@NonNull String forestWolf, @NonNull String boss) {
+        if (forestWolf == null) {
+            throw new NullPointerException("forestWolf is marked @NonNull but is null");
+        } else if (boss == null) {
+            throw new NullPointerException("boss is marked @NonNull but is null");
+        } else {
+            this.forestWolf = forestWolf;
+            this.boss = boss;
+        }
     }
-  }
+
+    protected static RequiredArgsConstructorExample of(@NonNull String forestWolf, @NonNull String boss) {
+        return new RequiredArgsConstructorExample(forestWolf, boss);
+    }
 }
 ~~~
