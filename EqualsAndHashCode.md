@@ -12,105 +12,121 @@
 
 把它们定义到父类中，恰好id（数据库主键）也在父类中，那么就会存在部分对象在比较时，它们并不相等，却因为lombok自动生成的equals(Object other) 和 hashCode()方法判定为相等，从而导致出错。<br>
 
-lombok.equalsAndHashCode.doNotUseGetters 同样可以指定是否使用get语句获取对象
+lombok.equalsAndHashCode.doNotUseGetters 同样可以指定是否使用get语句获取对象<br>
 同样这种比较时，数组使用的也是Arrays.deepHashCode()，引用不当也会造成StackOverflowErrors
 
 ~~~java
 @EqualsAndHashCode
 public class EqualsAndHashCodeExample {
-  private transient int transientVar = 10;
-  private String name;
-  private double score;
-  @EqualsAndHashCode.Exclude private Shape shape = new Square(5, 10);
-  private String[] tags;
-  @EqualsAndHashCode.Exclude private int id;
-  
-  public String getName() {
-    return this.name;
-  }
-  
-  @EqualsAndHashCode(callSuper=true)
-  public static class Square extends Shape {
-    private final int width, height;
-    
-    public Square(int width, int height) {
-      this.width = width;
-      this.height = height;
+    private transient int transientVar = 10;
+    private static String boss;
+    private String name;
+    private String[] tags;
+
+    @EqualsAndHashCode.Exclude
+    private int id;
+
+    @EqualsAndHashCode(callSuper = true)
+    public static class Square extends Shape {
+        private final int width, height;
+
+        public Square(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
     }
-  }
 }
 ~~~
 翻译后：
 ~~~java
-import java.util.Arrays;
 
 public class EqualsAndHashCodeExample {
-  private transient int transientVar = 10;
-  private String name;
-  private double score;
-  private Shape shape = new Square(5, 10);
-  private String[] tags;
-  private int id;
-  
-  public String getName() {
-    return this.name;
-  }
-  
-  @Override public boolean equals(Object o) {
-    if (o == this) return true;
-    if (!(o instanceof EqualsAndHashCodeExample)) return false;
-    EqualsAndHashCodeExample other = (EqualsAndHashCodeExample) o;
-    if (!other.canEqual((Object)this)) return false;
-    if (this.getName() == null ? other.getName() != null : !this.getName().equals(other.getName())) return false;
-    if (Double.compare(this.score, other.score) != 0) return false;
-    if (!Arrays.deepEquals(this.tags, other.tags)) return false;
-    return true;
-  }
-  
-  @Override public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final long temp1 = Double.doubleToLongBits(this.score);
-    result = (result*PRIME) + (this.name == null ? 43 : this.name.hashCode());
-    result = (result*PRIME) + (int)(temp1 ^ (temp1 >>> 32));
-    result = (result*PRIME) + Arrays.deepHashCode(this.tags);
-    return result;
-  }
-  
-  protected boolean canEqual(Object other) {
-    return other instanceof EqualsAndHashCodeExample;
-  }
-  
-  public static class Square extends Shape {
-    private final int width, height;
-    
-    public Square(int width, int height) {
-      this.width = width;
-      this.height = height;
+    private transient int transientVar = 10;
+    private static String boss;
+    private String name;
+    private String[] tags;
+    private int id;
+
+    public EqualsAndHashCodeExample() {
     }
-    
-    @Override public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Square)) return false;
-      Square other = (Square) o;
-      if (!other.canEqual((Object)this)) return false;
-      if (!super.equals(o)) return false;
-      if (this.width != other.width) return false;
-      if (this.height != other.height) return false;
-      return true;
+
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        } else if (!(o instanceof EqualsAndHashCodeExample)) {
+            return false;
+        } else {
+            EqualsAndHashCodeExample other = (EqualsAndHashCodeExample)o;
+            if (!other.canEqual(this)) {
+                return false;
+            } else {
+                Object this$name = this.name;
+                Object other$name = other.name;
+                if (this$name == null) {
+                    if (other$name == null) {
+                        return Arrays.deepEquals(this.tags, other.tags);
+                    }
+                } else if (this$name.equals(other$name)) {
+                    return Arrays.deepEquals(this.tags, other.tags);
+                }
+
+                return false;
+            }
+        }
     }
-    
-    @Override public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      result = (result*PRIME) + super.hashCode();
-      result = (result*PRIME) + this.width;
-      result = (result*PRIME) + this.height;
-      return result;
-    }
-    
+
     protected boolean canEqual(Object other) {
-      return other instanceof Square;
+        return other instanceof EqualsAndHashCodeExample;
     }
-  }
+
+    public int hashCode() {
+        int PRIME = true;
+        int result = 1;
+        Object $name = this.name;
+        int result = result * 59 + ($name == null ? 43 : $name.hashCode());
+        result = result * 59 + Arrays.deepHashCode(this.tags);
+        return result;
+    }
+
+    public static class Square extends Shape {
+        private final int width;
+        private final int height;
+
+        public Square(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        public boolean equals(Object o) {
+            if (o == this) {
+                return true;
+            } else if (!(o instanceof EqualsAndHashCodeExample.Square)) {
+                return false;
+            } else {
+                EqualsAndHashCodeExample.Square other = (EqualsAndHashCodeExample.Square)o;
+                if (!other.canEqual(this)) {
+                    return false;
+                } else if (!super.equals(o)) {
+                    return false;
+                } else if (this.width != other.width) {
+                    return false;
+                } else {
+                    return this.height == other.height;
+                }
+            }
+        }
+
+        protected boolean canEqual(Object other) {
+            return other instanceof EqualsAndHashCodeExample.Square;
+        }
+
+        public int hashCode() {
+            int PRIME = true;
+            int result = super.hashCode();
+            result = result * 59 + this.width;
+            result = result * 59 + this.height;
+            return result;
+        }
+    }
 }
+~~~
