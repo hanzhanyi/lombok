@@ -2,6 +2,9 @@
 
 这三个注解都会忽略static变量
 
+---
+
+
 ## @NoArgsConstructor
 
 此注解自动生成一个无参构造器，如果类中存在未赋值的final类型变量，则会编译报错。
@@ -28,6 +31,9 @@ public class NoArgsConstructorExample {
 }
 ```
 
+---
+
+
 ## @AllArgsConstructor
 为类中所有参数（排除static）进行构造参数的生成。标有@NonNull的字段会导致对这些参数进行空检查。
 
@@ -51,6 +57,9 @@ public class AllArgsConstructorExample {
     }
 }
 ```
+
+---
+
 
 ## @RequiredArgsConstructor
 
